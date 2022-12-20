@@ -1,8 +1,11 @@
 #include <fmt/core.h>
 
-#include "dummy.hpp"
+#include "locations/LocationFactory.hpp"
 
 auto main() -> int
 {
-  fmt::print("{}\n", fib(10));
+  auto forest =
+      LocationFactory::createLocation(LocationFactory::LocationType::FOREST);
+
+  fmt::print("You begin in a {}", forest->describe());
 }

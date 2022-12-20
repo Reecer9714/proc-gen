@@ -1,8 +1,13 @@
 find_package(fmt REQUIRED)
 
 add_library(cmake_cpp_boilerplate_lib
-    "../include/dummy.hpp"
-    dummy.cpp)
+    locations/Location.hpp
+    locations/LocationBuilder.hpp
+    locations/LocationFactory.hpp
+    locations/TownGenerator.hpp
+    )
+set_target_properties(cmake_cpp_boilerplate_lib PROPERTIES LINKER_LANGUAGE CXX)
+
 add_library(cmake_cpp_boilerplate::lib ALIAS cmake_cpp_boilerplate_lib)
 target_link_libraries(cmake_cpp_boilerplate_lib
         PUBLIC cmake_cpp_boilerplate::compiler_options fmt::fmt)
