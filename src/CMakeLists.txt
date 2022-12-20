@@ -10,7 +10,7 @@ set_target_properties(cmake_cpp_boilerplate_lib PROPERTIES LINKER_LANGUAGE CXX)
 
 add_library(cmake_cpp_boilerplate::lib ALIAS cmake_cpp_boilerplate_lib)
 target_link_libraries(cmake_cpp_boilerplate_lib
-        PUBLIC cmake_cpp_boilerplate::compiler_options fmt::fmt)
+        PUBLIC cmake_cpp_boilerplate::compiler_options fmt::fmt-header-only)
 target_include_directories(cmake_cpp_boilerplate_lib PUBLIC "${PROJECT_SOURCE_DIR}/include")
 
 if(${BP_BUILD_TESTS_COVERAGE})

@@ -20,14 +20,14 @@ public:
   auto addConnection(Location* toConnect, bool hidden = false,
                      bool locked = false) -> Connection*;
 
-  inline auto describe() const -> std::string override
+  [[nodiscard]] inline auto describe() const -> std::string override
   {
-    return fmt::format("{}\n{}", Describable::describe(), describeExits());
+    return fmt::format("{}\n\t{}", Describable::describe(), describeExits());
   }
 
-  inline auto describeExits() const -> std::string
+  [[nodiscard]] inline auto describeExits() const -> std::string
   {
-    return fmt::format("{}\n{}", Describable::describe(), );
+    return fmt::format("{}", "There are exits");
   }
 
 private:

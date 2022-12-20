@@ -1,22 +1,22 @@
 #pragma once
 
-#include <fmt/core.h>
+#include <fmt/format.h>
 #include <string>
 
 class Describable {
 public:
   virtual ~Describable() = default;
 
-  void setName(const std::string& name)
+  void setName(const std::string& new_name)
   {
-    this->name = name;
+    this->name = new_name;
   }
-  void setDescription(const std::string& description)
+  void setDescription(const std::string& new_description)
   {
-    this->description = description;
+    this->description = new_description;
   }
 
-  inline virtual auto describe() const -> std::string
+  [[nodiscard]] inline virtual auto describe() const -> std::string
   {
     return fmt::format("{}\n{}", name, description);
   };
