@@ -1,11 +1,10 @@
 #include <fmt/format.h>
 
-#include "locations/LocationFactory.hpp"
+#include "locations/DungeonGenerator.hpp"
 
 auto main() -> int
 {
-  auto forest =
-      LocationFactory::createLocation(LocationFactory::LocationType::FOREST);
+  auto dungeon = DungeonGenerator::generateDungeon(5);
 
-  fmt::print("You begin in a {}", forest->describe());
+  fmt::print("You begin in a {}", dungeon.describe());
 }

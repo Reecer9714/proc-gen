@@ -16,9 +16,14 @@ public:
     this->description = new_description;
   }
 
+  [[nodiscard]] inline auto getName() const -> std::string
+  {
+    return this->name;
+  };
+
   [[nodiscard]] inline virtual auto describe() const -> std::string
   {
-    return fmt::format("{}\n{}", name, description);
+    return fmt::format("{}\n{}", this->name, this->description);
   };
 
 private:

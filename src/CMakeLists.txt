@@ -1,10 +1,9 @@
 find_package(fmt REQUIRED)
 
 add_library(cmake_cpp_boilerplate_lib
-    locations/Location.hpp
-    locations/LocationBuilder.hpp
-    locations/LocationFactory.hpp
-    locations/TownGenerator.hpp
+    locations/Dungeon.cpp
+    locations/Dungeon.hpp
+    locations/DungeonGenerator.hpp
     )
 set_target_properties(cmake_cpp_boilerplate_lib PROPERTIES LINKER_LANGUAGE CXX)
 
