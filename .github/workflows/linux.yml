@@ -16,7 +16,7 @@ jobs:
       matrix:
         os: [ ubuntu-20.04 ]
         build_type: [ Debug, Release, RelWithDebInfo ]
-        cxx: [ g++-10 ]
+        cxx: [ g++-12 ]
         std: [ 20 ]
 
     steps:
