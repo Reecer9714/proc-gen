@@ -40,7 +40,7 @@ jobs:
           python3 -m pip install --upgrade pip setuptools
           python3 -m pip install cmake
           cmake -E make_directory ${{runner.workspace}}/build
-          sudo apt install g++-10
+          sudo apt install ${{ matrix.cxx }}
       - name: Install conan
         shell: bash
         run: |
@@ -51,7 +51,7 @@ jobs:
         shell: bash
         working-directory: ${{runner.workspace}}/build
         env:
-          CXX: g++-10
+          CXX: ${{ matrix.cxx }}
         run: |
           source ~/.profile
           cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} \
