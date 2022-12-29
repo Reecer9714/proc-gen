@@ -7,7 +7,6 @@
 
 // A command handler function takes a vector of strings as arguments and returns void
 using CommandHandler = std::function<void(std::vector<std::string>)>;
-;
 
 class CommandParser {
 public:
