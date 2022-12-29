@@ -21,12 +21,17 @@ public:
     return this->name;
   };
 
+  [[nodiscard]] auto getDescription() const -> const std::string&
+  {
+    return description;
+  }
+
   [[nodiscard]] inline virtual auto describe() const -> std::string
   {
     return fmt::format("{}\n{}", this->name, this->description);
   };
 
-private:
+protected:
   std::string name;
   std::string description;
 };

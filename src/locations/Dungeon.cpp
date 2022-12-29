@@ -1,40 +1,26 @@
 #include "Dungeon.hpp"
+#include <algorithm>
 
-auto Dungeon::Room::addConnection(const std::string& direction, Room& toConnect, bool hidden, bool locked)
-    -> Connection&
+auto Dungeon::addRoom(const Room& room) -> bool
 {
-  toConnect.addOneWayConnection(direction, *this, hidden, locked);
-  return addOneWayConnection(direction, toConnect, hidden, locked);
-};
+  // Check if the room is already in the dungeon
+  if (std::find(rooms.cbegin(), rooms.cend(), room) != rooms.cend()) { return false; }
 
-auto Dungeon::Room::addOneWayConnection(const std::string& direction, Room& toConnect, bool hidden, bool locked)
-    -> Connection&
-{
-  auto [newConnection, success] = exits.try_emplace(direction, toConnect);
-  newConnection->second.hidden = hidden;
-  newConnection->second.locked = locked;
-  return newConnection->second;
-};
+  rooms.push_back(room);
+  return true;
+}
 
-[[nodiscard]] auto Dungeon::Room::describeExits() const -> std::string
+auto Dungeon::move(const std::string& direction) -> MoveResult
 {
-  std::ostringstream exitStream;
-  exitStream << "Exits:\n";
-  bool hasVisibleExits = false;
-  for (const auto& [direction, connection] : exits) {
-    if (!connection.hidden) {
-      exitStream << '\t' << direction << ": " << connection.describe() << ", \n";
-      hasVisibleExits = true;
-    }
-  }
-  if (hasVisibleExits) {
-    [[likely]]
-    // Remove the final ", " from the string
-    exitStream.seekp(-3, std::ios_base::end);
-    exitStream << "";
-  } else {
-    exitStream.str("");
-    exitStream << "There are no visible exits.";
-  }
-  return exitStream.str();
+  // Check if there is a connection in the given direction
+  auto exits = currentRoom->getExits();
+  auto it = exits.find(direction);
+  if (it == exits.end()) { return MoveResult::NoConnection; }
+
+  // Check if the connection is locked
+  if (it->second.isLocked()) { return MoveResult::Locked; }
+
+  // Update the current room
+  currentRoom = &it->second.getRoom();
+  return MoveResult::Success;
 }

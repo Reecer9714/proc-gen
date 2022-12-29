@@ -1,7 +1,5 @@
 #pragma once
 
-#pragma once
-
 #include <sstream>
 #include <string>
 #include <unordered_map>
@@ -9,47 +7,18 @@
 #include <vector>
 
 #include "../Describable.hpp"
+#include "Room.hpp"
 
 class Dungeon : public Describable {
 public:
-  struct Room : public Describable {
-    struct Connection : public Describable {
-      bool hidden = false;
-      bool locked = false;
-      Room& connectedRoom;
+  enum class MoveResult { Success, NoConnection, Locked };
 
-      explicit Connection(Room& toConnect) : connectedRoom(toConnect){};
-      ~Connection() override = default;
-
-      [[nodiscard]] inline auto describe() const -> std::string override
-      {
-        return connectedRoom.getName();
-      }
-    };
-
-    auto addConnection(const std::string& direction, Room& toConnect, bool hidden = false, bool locked = false)
-        -> Connection&;
-
-    auto addOneWayConnection(const std::string& direction, Room& toConnect, bool hidden = false, bool locked = false)
-        -> Connection&;
-
-    [[nodiscard]] auto describeExits() const -> std::string;
-
-    [[nodiscard]] inline auto describe() const -> std::string override
-    {
-      return fmt::format("{}\n{}", Describable::describe(), describeExits());
-    }
-
-  private:
-    std::unordered_map<std::string, Connection> exits;
-  };
-
-  explicit Dungeon(Room start) : rootRoom(std::move(start)){};
+  explicit Dungeon(Room start) : rootRoom(std::move(start)), currentRoom(&rootRoom){};
   ~Dungeon() override = default;
 
   [[nodiscard]] inline auto describe() const -> std::string override
   {
-    return rootRoom.describe();
+    return currentRoom->describe();
   }
 
   [[nodiscard]] inline auto getRoot() -> Room&
@@ -57,12 +26,17 @@ public:
     return rootRoom;
   };
 
-  [[nodiscard]] inline auto getRooms() const -> std::vector<Room>
+  [[nodiscard]] inline auto getRooms() -> std::vector<Room>&
   {
     return rooms;
   };
 
+  auto addRoom(const Room& room) -> bool;
+
+  auto move(const std::string& direction) -> MoveResult;
+
 private:
   Room rootRoom;
+  const Room* currentRoom;
   std::vector<Room> rooms;
 };

@@ -6,6 +6,11 @@
 
 class DungeonGenerator {
 public:
+  static constexpr auto SmallSize = 5;
+  static constexpr auto MediumSize = 10;
+  static constexpr auto LargeSize = 15;
+  static constexpr auto HugeSize = 20;
+
   static auto generateDungeon(size_t size) -> Dungeon
   {
     std::random_device rd;
@@ -13,23 +18,24 @@ public:
     std::uniform_int_distribution<size_t> dis(1, size - 1);
 
     // Create a dungeon location
-    Dungeon::Room rootLocation;
+    Room rootLocation;
     rootLocation.setName("Dungeon");
     rootLocation.setDescription("A bustling dungeon filled with shops and people.");
     Dungeon dungeon(rootLocation);
 
     // Generate additional locations
-    auto dungeonRooms = dungeon.getRooms();
     for (auto i = 0U; i < size; ++i) {
-      auto& room = dungeonRooms.emplace_back();
+      Room room;
       room.setName("Location " + std::to_string(i + 1));
+      dungeon.addRoom(room);
     }
 
     // Add random connections between the locations
+    auto& dungeonRooms = dungeon.getRooms();
     for (auto& room : dungeonRooms) {
       auto numConnections = dis(gen);
       for (auto i = 0U; i < numConnections; ++i) {
-        auto& connectedLocation = dungeonRooms[dis(gen)];
+        auto& connectedLocation = dungeonRooms.at(dis(gen));
         room.addConnection("direction" + std::to_string(i), connectedLocation);
       }
     }

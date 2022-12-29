@@ -1,9 +1,15 @@
 find_package(fmt REQUIRED)
 
 add_library(cmake_cpp_boilerplate_lib
+    CommandParser.cpp
+    CommandParser.hpp
+    locations/Connection.cpp
+    locations/Connection.hpp
     locations/Dungeon.cpp
     locations/Dungeon.hpp
     locations/DungeonGenerator.hpp
+    locations/Room.cpp
+    locations/Room.hpp
     )
 set_target_properties(cmake_cpp_boilerplate_lib PROPERTIES LINKER_LANGUAGE CXX)
 
