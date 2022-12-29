@@ -14,7 +14,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ ubuntu-20.04 ]
+        os: [ ubuntu-22.04 ]
         build_type: [ Debug, Release, RelWithDebInfo ]
         cxx: [ g++-12 ]
         std: [ 20 ]
