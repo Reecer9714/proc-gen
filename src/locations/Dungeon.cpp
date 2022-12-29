@@ -1,12 +1,13 @@
 #include "Dungeon.hpp"
 #include <algorithm>
+#include <string>
 
-auto Dungeon::addRoom(const Room& room) -> bool
+auto Dungeon::addRoom(Room room) -> bool
 {
   // Check if the room is already in the dungeon
   if (std::find(rooms.cbegin(), rooms.cend(), room) != rooms.cend()) { return false; }
 
-  rooms.push_back(room);
+  rooms.emplace_back(std::move(room));
   return true;
 }
 
@@ -18,9 +19,9 @@ auto Dungeon::move(const std::string& direction) -> MoveResult
   if (it == exits.end()) { return MoveResult::NoConnection; }
 
   // Check if the connection is locked
-  if (it->second.isLocked()) { return MoveResult::Locked; }
+  if (it->second->isLocked()) { return MoveResult::Locked; }
 
   // Update the current room
-  currentRoom = &it->second.getRoom();
+  currentRoom = &it->second->getRoom();
   return MoveResult::Success;
 }

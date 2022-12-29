@@ -2,21 +2,21 @@
 #include <sstream>
 #include <string>
 
-auto Room::addConnection(const std::string& direction, Room& toConnect, bool hidden, bool locked) -> const Connection&
+auto Room::addConnection(const std::string& direction, Room& toConnect, bool hidden, bool locked) -> void
 {
   toConnect.addOneWayConnection(direction, *this, hidden, locked);
-  return addOneWayConnection(direction, toConnect, hidden, locked);
+  addOneWayConnection(direction, toConnect, hidden, locked);
 }
 
-auto Room::addOneWayConnection(const std::string& direction, Room& toConnect, bool hidden, bool locked)
-    -> const Connection&
+auto Room::addOneWayConnection(const std::string& direction, Room& toConnect, bool hidden, bool locked) -> void
 {
-  auto newConnection = Connection{toConnect, locked, hidden};
+  auto newConnection = Connection{direction, toConnect, locked, hidden};
   auto it = std::find_if(connections.cbegin(), connections.cend(),
-                         [newConnection](const Connection& ptr) { return newConnection == ptr; });
-  if (it != connections.cend()) return *it;
-  auto [connection, _] = exits.emplace(direction, newConnection);
-  return connection->second;
+                         [newConnection](const Connection& ptr) { return newConnection.getName() == ptr.getName(); });
+  if (it != connections.cend()) return;   // Don't allow duplicate connections
+  if (exits.count(direction) > 0) return; // Don't allow overwriting an existing exit
+  auto [connected, _] = connections.emplace(newConnection);
+  exits.insert_or_assign(direction, &(*connected));
 }
 
 [[nodiscard]] auto Room::describeExits() const -> std::string
@@ -25,8 +25,8 @@ auto Room::addOneWayConnection(const std::string& direction, Room& toConnect, bo
   exitStream << "Exits:\n";
   bool hasVisibleExits = false;
   for (const auto& [direction, connection] : exits) {
-    if (!connection.isHidden()) {
-      exitStream << '\t' << direction << ": " << connection.describe() << ", \n";
+    if (!connection->isHidden()) {
+      exitStream << fmt::format("\t{}: {}, \n", direction, connection->describe());
       hasVisibleExits = true;
     }
   }
@@ -47,13 +47,13 @@ auto Room::addOneWayConnection(const std::string& direction, Room& toConnect, bo
   return fmt::format("{}\n{}", Describable::describe(), describeExits());
 }
 
-[[nodiscard]] auto Room::getExits() const -> const std::unordered_map<std::string, Connection&>&
+[[nodiscard]] auto Room::getExits() const -> const std::unordered_map<std::string, const Connection*>&
 {
   return exits;
 }
 
 auto Room::operator==(const Room& rhs) const -> bool
 {
-  return this->name == rhs.name && this->description == rhs.description && this->connections == rhs.connections &&
-         this->exits == rhs.exits;
+  return this->getName() == rhs.getName() && this->getDescription() == rhs.getDescription() &&
+         this->connections == rhs.connections && this->exits == rhs.exits;
 }

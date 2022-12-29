@@ -6,8 +6,8 @@ struct Room;
 
 class Connection : public Describable {
 public:
-  explicit Connection(Room& toConnect, bool locked = false, bool hidden = false)
-      : connectedRoom(&toConnect), hidden_(hidden), locked_(locked){};
+  explicit Connection(std::string name, Room& toConnect, bool locked = false, bool hidden = false)
+      : Describable(std::move(name)), connectedRoom(&toConnect), hidden_(hidden), locked_(locked){};
   ~Connection() override = default;
 
   [[nodiscard]] auto describe() const -> std::string override;

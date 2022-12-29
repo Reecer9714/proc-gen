@@ -17,7 +17,7 @@ auto main() -> int
     auto result = dungeon.move(args[0]);
     switch (result) {
     case Dungeon::MoveResult::Success:
-      fmt::print("Going to {}\n{}", args[0], dungeon.describe());
+      fmt::print("Going to {}\n You are now in {}", args[0], dungeon.describe());
       break;
     case Dungeon::MoveResult::NoConnection:
       fmt::print("There is nothing to {}\n", args[0]);

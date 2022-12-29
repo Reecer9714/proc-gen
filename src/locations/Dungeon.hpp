@@ -13,7 +13,7 @@ class Dungeon : public Describable {
 public:
   enum class MoveResult { Success, NoConnection, Locked };
 
-  explicit Dungeon(Room start) : rootRoom(std::move(start)), currentRoom(&rootRoom){};
+  explicit Dungeon(Room start) : Describable(start.getName()), rootRoom(std::move(start)), currentRoom(&rootRoom){};
   ~Dungeon() override = default;
 
   [[nodiscard]] inline auto describe() const -> std::string override
@@ -31,7 +31,7 @@ public:
     return rooms;
   };
 
-  auto addRoom(const Room& room) -> bool;
+  auto addRoom(Room room) -> bool;
 
   auto move(const std::string& direction) -> MoveResult;
 

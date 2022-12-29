@@ -23,5 +23,6 @@
 
 auto Connection::operator==(const Connection& rhs) const -> bool
 {
-  return this->connectedRoom == rhs.connectedRoom && this->hidden_ == rhs.hidden_ && this->locked_ == rhs.locked_;
+  return this->getName() == rhs.getName() && this->connectedRoom == rhs.connectedRoom && this->hidden_ == rhs.hidden_ &&
+         this->locked_ == rhs.locked_;
 }

@@ -2,36 +2,35 @@
 
 #include <fmt/format.h>
 #include <string>
+#include <utility>
 
 class Describable {
 public:
   virtual ~Describable() = default;
 
-  void setName(const std::string& new_name)
+  explicit Describable(std::string name) : name_(std::move(name)){};
+
+  void setDescription(const std::string& description)
   {
-    this->name = new_name;
-  }
-  void setDescription(const std::string& new_description)
-  {
-    this->description = new_description;
+    this->description_ = description;
   }
 
   [[nodiscard]] inline auto getName() const -> std::string
   {
-    return this->name;
+    return this->name_;
   }
 
   [[nodiscard]] auto getDescription() const -> const std::string&
   {
-    return description;
+    return description_;
   }
 
   [[nodiscard]] inline virtual auto describe() const -> std::string
   {
-    return fmt::format("{}\n{}", this->name, this->description);
+    return fmt::format("{}\n{}", this->name_, this->description_);
   }
 
-protected:
-  std::string name;
-  std::string description;
+private:
+  std::string name_;
+  std::string description_;
 };

@@ -18,15 +18,13 @@ public:
     std::uniform_int_distribution<size_t> dis(1, size - 1);
 
     // Create a dungeon location
-    Room rootLocation;
-    rootLocation.setName("Dungeon");
+    Room rootLocation("Dungeon");
     rootLocation.setDescription("A bustling dungeon filled with shops and people.");
     Dungeon dungeon(rootLocation);
 
     // Generate additional locations
     for (auto i = 0U; i < size; ++i) {
-      Room room;
-      room.setName("Location " + std::to_string(i + 1));
+      Room room("Location " + std::to_string(i + 1));
       dungeon.addRoom(room);
     }
 
