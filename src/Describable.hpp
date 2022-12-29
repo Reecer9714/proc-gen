@@ -19,7 +19,7 @@ public:
   [[nodiscard]] inline auto getName() const -> std::string
   {
     return this->name;
-  };
+  }
 
   [[nodiscard]] auto getDescription() const -> const std::string&
   {
@@ -29,7 +29,7 @@ public:
   [[nodiscard]] inline virtual auto describe() const -> std::string
   {
     return fmt::format("{}\n{}", this->name, this->description);
-  };
+  }
 
 protected:
   std::string name;
