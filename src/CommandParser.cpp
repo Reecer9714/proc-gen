@@ -1,7 +1,7 @@
 #include "CommandParser.hpp"
 
 #include <algorithm>
-#include <fmt/core.h>
+#include <fmt/format.h>
 #include <sstream>
 #include <stdexcept>
 
