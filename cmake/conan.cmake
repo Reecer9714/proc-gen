@@ -1,17 +1,9 @@
 macro(run_conan)
-    if(NOT EXISTS "${CMAKE_BINARY_DIR}/conan.cmake")
-        message(STATUS "Downloading conan.cmake from https://github.com/conan-io/cmake-conan")
-        file(DOWNLOAD "https://raw.githubusercontent.com/conan-io/cmake-conan/master/conan.cmake"
-                "${CMAKE_BINARY_DIR}/conan.cmake")
+    if(NOT EXISTS "${CMAKE_BINARY_DIR}/conan_provider.cmake")
+        message(STATUS "Downloading conan_provider.cmake from https://github.com/conan-io/cmake-conan")
+        file(DOWNLOAD "https://https://raw.githubusercontent.com/conan-io/cmake-conan/refs/heads/develop2/conan_provider.cmake"
+                "${CMAKE_BINARY_DIR}/conan_provider.cmake")
     endif()
 
-    include(${CMAKE_BINARY_DIR}/conan.cmake)
-    list(APPEND CMAKE_PREFIX_PATH "${CMAKE_BINARY_DIR}/${CMAKE_BUILD_TYPE}/generators")
-
-    conan_cmake_autodetect(settings)
-    conan_cmake_install(PATH_OR_REFERENCE ${PROJECT_SOURCE_DIR}
-            BUILD missing
-            SETTINGS ${settings}
-            OUTPUT_QUIET
-            )
+    include(${CMAKE_BINARY_DIR}/conan_provider.cmake)
 endmacro()

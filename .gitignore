@@ -2,3 +2,4 @@ CMakeLists.txt.user
 .idea
 .cache
 build*
+CMakeUserPresets.json

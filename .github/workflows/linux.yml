@@ -1,6 +1,9 @@
 name: Linux
 
-on: [ push ]
+on:
+  push:
+    branches:
+      - main
 
 env:
   # Conan cache environment variables
@@ -10,21 +13,20 @@ env:
 
 jobs:
   build:
-
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ ubuntu-22.04 ]
-        build_type: [ Debug, Release, RelWithDebInfo ]
-        cxx: [ g++-12 ]
-        std: [ 20 ]
+        os: [ubuntu-22.04]
+        build_type: [Debug, Release, RelWithDebInfo]
+        cxx: [g++-12]
+        std: [20]
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Cache
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         env:
           cache-name: cache-conan-modules
         with:
@@ -41,26 +43,36 @@ jobs:
           python3 -m pip install cmake
           cmake -E make_directory ${{runner.workspace}}/build
           sudo apt install ${{ matrix.cxx }}
+          echo "CONAN_PRESET=$(echo ${{matrix.build_type}} | tr "[:upper:]" "[:lower:]")" >> "${GITHUB_ENV}"
+
       - name: Install conan
         shell: bash
         run: |
           python3 -m pip install conan
+
+      - name: Configure Conan
+        run: |
+          conan profile detect
+
+      - name: Run Conan Install
+        run: |
+          conan install $GITHUB_WORKSPACE --build=missing \
+            -s build_type=${{ matrix.build_type }} -s compiler.cppstd=${{ matrix.std }}
+
       - name: Configure CMake
         # Use a bash shell so we can use the same syntax for environment variable
         # access regardless of the host operating system
         shell: bash
-        working-directory: ${{runner.workspace}}/build
         env:
           CXX: ${{ matrix.cxx }}
         run: |
           source ~/.profile
-          cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} \
-                -DCMAKE_CXX_STANDARD=${{matrix.std}}
+          cmake $GITHUB_WORKSPACE -G Ninja -DCMAKE_BUILD_TYPE=${{ matrix.build_type }} \
+                -DCMAKE_CXX_STANDARD=${{matrix.std}} --preset=conan-$CONAN_PRESET
+
       - name: Build
-        working-directory: ${{runner.workspace}}/build
         shell: bash
-        # Execute the build.  You can specify a specific target with "--target <NAME>"
-        run: cmake --build . --config ${{ matrix.build_type }}
+        run: cmake --build --preset=conan-$CONAN_PRESET
 
       - name: Test
         working-directory: ${{runner.workspace}}/build
