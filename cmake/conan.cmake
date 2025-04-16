@@ -6,6 +6,7 @@ macro(run_conan)
     endif()
 
     include(${CMAKE_BINARY_DIR}/conan.cmake)
+    list(APPEND CMAKE_PREFIX_PATH "${CMAKE_BINARY_DIR}/${CMAKE_BUILD_TYPE}/generators")
 
     conan_cmake_autodetect(settings)
     conan_cmake_install(PATH_OR_REFERENCE ${PROJECT_SOURCE_DIR}

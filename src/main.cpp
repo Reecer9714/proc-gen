@@ -1,11 +1,31 @@
+#include <filesystem>
 #include <fmt/format.h>
 #include <iostream>
 
 #include "CommandParser.hpp"
+#include "loaders/ModuleLoader.hpp"
 #include "locations/DungeonGenerator.hpp"
 
 auto main() -> int
 {
+  // Load Modules
+  auto modules = load_available_modules_list(std::filesystem::current_path() / "data");
+  // Print loaded modules
+  for (const auto& module : modules.available) {
+    fmt::print("Available module: {}\n", module.id);
+    fmt::print("Path: {}\n", module.path.string());
+    fmt::print("Priority: {}\n", module.priority);
+    fmt::print("Enabled: {}\n", module.enabled ? "true" : "false");
+    fmt::print("Dependencies: {}\n", fmt::join(module.dependencies, ", "));
+  }
+  fmt::print("Available {} modules\n", modules.available.size());
+
+  // Load the enabled modules
+  for (const auto& module : modules.enabled) {
+    fmt::print("Loading module: {}\n", module->id);
+    load_module(*module);
+  }
+
   auto running = true;
   auto dungeon = DungeonGenerator::generateDungeon(DungeonGenerator::SmallSize);
 
@@ -28,9 +48,8 @@ auto main() -> int
     }
   });
   parser.registerCommand({"look"}, [dungeon](const std::vector<std::string>& args) {
-    if (args.empty()) {
-      fmt::print("{}\n", dungeon.describe());
-    } else {
+    if (args.empty()) { fmt::print("{}\n", dungeon.describe()); }
+    else {
       fmt::print("Looking at {}\n", args[0]);
     }
   });

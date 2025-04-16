@@ -1,0 +1,8 @@
+{
+    "id": "base",
+    "enabled": true,
+    "load_priority": 0,
+    "version": "0.0.1",
+    "description": "Base data for the game",
+    "author": "Reece"
+}

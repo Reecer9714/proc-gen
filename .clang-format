@@ -1,15 +1,14 @@
 ﻿---
 BasedOnStyle: LLVM
+AlwaysBreakTemplateDeclarations: true
 AllowShortBlocksOnASingleLine: Always
 AllowShortIfStatementsOnASingleLine: Always
 AllowShortLoopsOnASingleLine: true
 AllowShortFunctionsOnASingleLine: Empty
-BreakBeforeBraces: Custom
-BraceWrapping:
-  AfterClass: false
-  AfterFunction: true
-  SplitEmptyRecord: false
+BinPackParameters: false
+BreakBeforeBraces: Stroustrup
 ColumnLimit: 120
-DerivePointerAlignment: false
+PenaltyBreakAssignment: 50
+PenaltyBreakBeforeFirstCallParameter: 10
 PointerAlignment: Left
-...
+SortIncludes: true
